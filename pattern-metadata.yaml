@@ -1,5 +1,6 @@
 name: quarter
 displayName: ACM tenancy Tier 0
 description: Bootstrap OpenShift hub operators and deploy ACM tenancy policy + tenant GUI through GitOps.
+repo_url: https://github.com/ngner/quarter
 tier: sandbox
 support: community-best-effort

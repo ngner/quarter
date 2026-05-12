@@ -5,6 +5,7 @@ This repository is a thin Validated Patterns wrapper that reuses upstream `clust
 The goal is to keep the local repo as values-only as possible:
 
 - `Chart.yaml` depends on upstream `clustergroup`
+- `common/clustergroup/Chart.yaml` mirrors the root chart so the Patterns operator can use the standard `common/clustergroup` app path
 - `values-global.yaml` defines global pattern settings
 - `values-hub.yaml` defines `clusterGroup.applications` entries and their `repoURL`/`targetRevision`/`path`
 
@@ -30,9 +31,7 @@ This extension is designed to layer on top of the upstream Multicloud GitOps pat
      hubClusterDomain: apps.<your-domain>
    ```
 
-2. Update application repository pointers in `values-hub.yaml` as needed:
-   - `tenancy-base`, `tenancy-placements`, and AC/CM/SC policy apps default to upstream `multicloud-gitops`.
-   - `tenant-form-acm-gui` is a placeholder and should point to your GUI repo/fork.
+2. Update application repository pointers in `values-hub.yaml` as needed (this fork defaults to `ngner` policy and GUI repos; change `repoURL` / `targetRevision` if you use other remotes).
 
 ## Install from a bare cluster (operator primary path)
 
@@ -49,13 +48,13 @@ Use a Pattern custom resource so installation stays operator-managed.
 
    ```bash
    oc get pattern -A
-   oc get applications -n openshift-gitops
+   oc get applications.argoproj.io -n vp-gitops
    ```
 
 4. Verify expected artifacts:
 
    ```bash
-   oc get appproject -n openshift-gitops
+   oc get appproject -n vp-gitops
    oc get consoleplugins
    ```
 
@@ -76,7 +75,7 @@ oc apply -f rendered.yaml
 Run after either install path:
 
 ```bash
-oc get applications -n openshift-gitops
+oc get applications.argoproj.io -n vp-gitops
 oc get policies -A
 oc get consoleplugins
 ```

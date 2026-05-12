@@ -10,7 +10,7 @@ spec:
   gitSpec:
     inClusterGitServer: false
     targetRepo: https://github.com/ngner/quarter.git
-    targetRevision: feat/thin-upstream-wrapper
+    targetRevision: main
   extraValueFiles:
     - values-global.yaml
     - values-hub.yaml

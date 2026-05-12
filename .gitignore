@@ -1,3 +1,5 @@
 .output/
+.cursor/
 values-secret*.yaml
 !values-secret.yaml.template
+common/clustergroup/charts/
