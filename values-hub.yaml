@@ -1,63 +1,106 @@
-clusterGroup:
-  name: hub
-  isHubCluster: true
+clustergroup:
+  clusterGroup:
+    name: hub
+    isHubCluster: true
+    argoProjects:
+      - tenancy-policy
+    applications:
+      tenancyBase:
+        name: tenancy-base
+        namespace: tenancies
+        project: tenancy-policy
+        repoURL: https://github.com/ngner/tenancy-by-acm-policy.git
+        targetRevision: main
+        path: tenancies
+        kustomize: {}
+        syncPolicy:
+          automated:
+            prune: true
+            selfHeal: true
+        annotations:
+          argocd.argoproj.io/sync-wave: "10"
+
+      tenancyPlacements:
+        name: tenancy-placements
+        namespace: tenancies
+        project: tenancy-policy
+        repoURL: https://github.com/ngner/tenancy-by-acm-policy.git
+        targetRevision: main
+        path: placements
+        kustomize: {}
+        syncPolicy:
+          automated:
+            prune: true
+            selfHeal: true
+        annotations:
+          argocd.argoproj.io/sync-wave: "20"
+
+      tenancyAccessControl:
+        name: tenancy-access-control
+        namespace: policies
+        project: tenancy-policy
+        repoURL: https://github.com/ngner/tenancy-by-acm-policy.git
+        targetRevision: main
+        path: policygen/AC-Access-Control
+        kustomize: {}
+        syncPolicy:
+          automated:
+            prune: false
+            selfHeal: false
+        annotations:
+          argocd.argoproj.io/sync-wave: "30"
+
+      tenancyConfigurationManagement:
+        name: tenancy-configuration-management
+        namespace: policies
+        project: tenancy-policy
+        repoURL: https://github.com/ngner/tenancy-by-acm-policy.git
+        targetRevision: main
+        path: policygen/CM-Configuration-Management
+        kustomize: {}
+        syncPolicy:
+          automated:
+            prune: true
+            selfHeal: true
+        annotations:
+          argocd.argoproj.io/sync-wave: "40"
+
+      tenancySystemAndCommsProtection:
+        name: tenancy-system-and-communications-protection
+        namespace: policies
+        project: tenancy-policy
+        repoURL: https://github.com/ngner/tenancy-by-acm-policy.git
+        targetRevision: main
+        path: policygen/SC-System-and-Communications-Protection
+        kustomize: {}
+        syncPolicy:
+          automated:
+            prune: true
+            selfHeal: true
+        annotations:
+          argocd.argoproj.io/sync-wave: "50"
+
+      tenantGui:
+        name: tenant-form-acm-gui
+        namespace: tenant-form-acm-gui
+        project: tenancy-policy
+        repoURL: https://github.com/ngner/tenant-form-acm-gui.git
+        targetRevision: main
+        path: deployment
+        directory:
+          recurse: true
+          include: "*.yaml"
+        syncPolicy:
+          automated:
+            prune: true
+            selfHeal: true
+        annotations:
+          argocd.argoproj.io/sync-wave: "60"
 
 hub:
   applications:
-    tenancyBase:
-      enabled: true
-      namespace: tenancies
-      project: tenancy-policy
-      path: tenancies
-      syncWave: "10"
-      prune: true
-      selfHeal: true
-
-    tenancyPlacements:
-      enabled: true
-      namespace: tenancies
-      project: tenancy-policy
-      path: placements
-      syncWave: "20"
-      prune: true
-      selfHeal: true
-
-    tenancyAccessControl:
-      enabled: true
-      namespace: policies
-      project: tenancy-policy
-      path: policygen/AC-Access-Control
-      syncWave: "30"
-      prune: false
-      selfHeal: false
-
-    tenancyConfigurationManagement:
-      enabled: true
-      namespace: policies
-      project: tenancy-policy
-      path: policygen/CM-Configuration-Management
-      syncWave: "40"
-      prune: true
-      selfHeal: true
-
-    tenancySystemAndCommsProtection:
-      enabled: true
-      namespace: policies
-      project: tenancy-policy
-      path: policygen/SC-System-and-Communications-Protection
-      syncWave: "50"
-      prune: true
-      selfHeal: true
-
     tenantGui:
-      enabled: true
-      namespace: tenant-form-acm-gui
-      project: tenancy-policy
-      path: deployment
-      syncWave: "60"
-      prune: true
-      selfHeal: true
-      image: quay.io/validatedpatterns/tenant-form-acm-gui:latest
+      image: quay.io/ngner/tenant-form-acm-gui:latest
 
   consolePluginPatch:
     enabled: true

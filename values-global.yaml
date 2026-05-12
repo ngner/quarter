@@ -1,5 +1,7 @@
 global:
-  pattern: quarter
+  pattern: multicloud-gitops-extension
+  hubClusterDomain: apps.baremetal.internal.nickday.biz
+
   options:
     useCSV: false
     syncPolicy: Automatic
@@ -8,37 +10,3 @@ global:
   gitops:
     namespace: openshift-gitops
     project: hub
-
-  # External component repositories referenced by Tier 0.
-  repositories:
-    tenancyPolicy:
-      repoURL: https://github.com/ngner/tenancy-by-acm-policy.git
-      targetRevision: main
-    tenantGui:
-      repoURL: https://github.com/ngner/tenant-form-acm-gui.git
-      targetRevision: main
-
-  policyGenerator:
-    acmSubscriptionImage: registry.redhat.io/rhacm2/multicluster-operators-subscription-rhel9:v2.16
-    binarySourcePath: /policy-generator/PolicyGenerator-not-fips-compliant
-    binaryTargetPath: /.config/kustomize/plugin/policy.open-cluster-management.io/v1/policygenerator/PolicyGenerator
-
-  # Secret abstraction layer. Select backend when operational model is finalized.
-  secrets:
-    backend: abstract
-    keycloak:
-      targetSecretName: keycloak-tenant-realm
-      namespace: tenancies
-      clientSecretKey: client-secret
-    vault:
-      enabled: false
-      path: secret/data/quarter/keycloak
-      field: client-secret
-    externalSecrets:
-      enabled: false
-      secretStoreRef:
-        name: default
-        kind: ClusterSecretStore
-      remoteRef:
-        key: quarter/keycloak
-        property: client-secret

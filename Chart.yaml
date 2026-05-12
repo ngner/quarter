@@ -1,0 +1,10 @@
+apiVersion: v2
+name: multicloud-gitops-extension
+description: Thin upstream wrapper for the Validated Patterns multicloud-gitops pattern.
+type: application
+version: 0.1.0
+appVersion: "0.1.0"
+dependencies:
+  - name: clustergroup
+    repository: https://charts.validatedpatterns.io
+    version: 0.9.*
