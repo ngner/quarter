@@ -10,7 +10,7 @@ clustergroup:
         namespace: tenancies
         project: tenancy-policy
         repoURL: https://github.com/ngner/tenancy-by-acm-policy.git
-        targetRevision: main
+        targetRevision: master
         path: tenancies
         kustomize: {}
         syncPolicy:
@@ -25,7 +25,7 @@ clustergroup:
         namespace: tenancies
         project: tenancy-policy
         repoURL: https://github.com/ngner/tenancy-by-acm-policy.git
-        targetRevision: main
+        targetRevision: master
         path: placements
         kustomize: {}
         syncPolicy:
@@ -40,7 +40,7 @@ clustergroup:
         namespace: policies
         project: tenancy-policy
         repoURL: https://github.com/ngner/tenancy-by-acm-policy.git
-        targetRevision: main
+        targetRevision: master
         path: policygen/AC-Access-Control
         kustomize: {}
         syncPolicy:
@@ -55,7 +55,7 @@ clustergroup:
         namespace: policies
         project: tenancy-policy
         repoURL: https://github.com/ngner/tenancy-by-acm-policy.git
-        targetRevision: main
+        targetRevision: master
         path: policygen/CM-Configuration-Management
         kustomize: {}
         syncPolicy:
@@ -70,7 +70,7 @@ clustergroup:
         namespace: policies
         project: tenancy-policy
         repoURL: https://github.com/ngner/tenancy-by-acm-policy.git
-        targetRevision: main
+        targetRevision: master
         path: policygen/SC-System-and-Communications-Protection
         kustomize: {}
         syncPolicy:
