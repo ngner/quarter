@@ -12,7 +12,7 @@ clustergroup:
         repoURL: https://github.com/ngner/tenancy-by-acm-policy.git
         targetRevision: master
         path: tenancies
-        kustomize: {}
+        kustomize: true
         syncPolicy:
           automated:
             prune: true
@@ -27,7 +27,7 @@ clustergroup:
         repoURL: https://github.com/ngner/tenancy-by-acm-policy.git
         targetRevision: master
         path: placements
-        kustomize: {}
+        kustomize: true
         syncPolicy:
           automated:
             prune: true
@@ -42,7 +42,7 @@ clustergroup:
         repoURL: https://github.com/ngner/tenancy-by-acm-policy.git
         targetRevision: master
         path: policygen/AC-Access-Control
-        kustomize: {}
+        kustomize: true
         syncPolicy:
           automated:
             prune: false
@@ -57,7 +57,7 @@ clustergroup:
         repoURL: https://github.com/ngner/tenancy-by-acm-policy.git
         targetRevision: master
         path: policygen/CM-Configuration-Management
-        kustomize: {}
+        kustomize: true
         syncPolicy:
           automated:
             prune: true
@@ -72,7 +72,7 @@ clustergroup:
         repoURL: https://github.com/ngner/tenancy-by-acm-policy.git
         targetRevision: master
         path: policygen/SC-System-and-Communications-Protection
-        kustomize: {}
+        kustomize: true
         syncPolicy:
           automated:
             prune: true
@@ -87,9 +87,7 @@ clustergroup:
         repoURL: https://github.com/ngner/tenant-form-acm-gui.git
         targetRevision: main
         path: deployment
-        directory:
-          recurse: true
-          include: "*.yaml"
+        kustomize: true
         syncPolicy:
           automated:
             prune: true
