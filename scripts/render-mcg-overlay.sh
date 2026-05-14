@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Clone validatedpatterns/multicloud-gitops at deps/mcg-ref.txt and overlay Quarter
-# pattern-metadata + values files. Output: ./build/mcg-overlay (git repo ready to push
-# to branch pattern-install on this repository for the Validated Patterns Operator).
+# pattern-metadata + values files. Output: ./build/mcg-overlay (MCG clone with Quarter
+# overlay commit; push that commit to branch pattern-install on the Quarter GitHub repo).
 set -euo pipefail
 ROOT=$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)
 REF_FILE="${ROOT}/deps/mcg-ref.txt"
@@ -38,4 +38,20 @@ cp "${ROOT}/pattern-metadata.yaml" "${ROOT}/values-global.yaml" "${ROOT}/values-
     git -c core.hooksPath=/dev/null -c user.email=quarter-bot@users.noreply.github.com -c user.name=quarter-bot commit -m "Quarter overlay (MCG ref ${REF})"
   fi
 )
-echo "Rendered overlay at ${OUT}. Push HEAD to branch pattern-install on ${GITHUB_REPOSITORY:-your remote} for operator installs."
+QUARTER_GIT_URL=$(cd "$ROOT" && git remote get-url origin 2>/dev/null || true)
+echo "Rendered overlay at ${OUT}."
+echo ""
+echo "Branch \"pattern-install\" is the install branch on your Quarter repo (see examples/pattern.yaml targetRevision)."
+echo "It does not exist until you push there. This clone's origin is still upstream multicloud-gitops — do not push origin."
+echo "Add your Quarter remote and create or update pattern-install, for example:"
+echo "  cd \"${OUT}\""
+if [[ -n "${QUARTER_GIT_URL}" ]]; then
+  echo "  git remote add quarter \"${QUARTER_GIT_URL}\"   # omit if remote \"quarter\" already exists"
+  echo "  git push -f quarter HEAD:pattern-install"
+else
+  echo "  git remote add quarter <URL-of-your-quarter-repository>"
+  echo "  git push -f quarter HEAD:pattern-install"
+fi
+if [[ -n "${GITHUB_REPOSITORY:-}" ]]; then
+  echo "In GitHub Actions this repo is ${GITHUB_REPOSITORY}; the workflow pushes to branch pattern-install there."
+fi
