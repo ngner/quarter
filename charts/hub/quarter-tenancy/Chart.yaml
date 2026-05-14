@@ -1,6 +1,0 @@
-apiVersion: v2
-name: quarter-tenancy
-description: Tier 0 hub bootstrap handoff for ACM tenancy policy and tenant GUI.
-type: application
-version: 0.1.0
-appVersion: "0.1.0"

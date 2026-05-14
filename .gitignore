@@ -1,3 +1,4 @@
 .cursor/
 values-secret*.yaml
 build/
+.github/
