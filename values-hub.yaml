@@ -1,106 +1,164 @@
-clustergroup:
-  clusterGroup:
-    name: hub
-    isHubCluster: true
-    argoProjects:
-      - tenancy-policy
-    applications:
-      tenancyBase:
-        name: tenancy-base
-        namespace: tenancies
-        project: tenancy-policy
-        repoURL: https://github.com/ngner/tenancy-by-acm-policy.git
-        targetRevision: master
-        path: tenancies
-        kustomize: true
-        syncPolicy:
-          automated:
-            prune: true
-            selfHeal: true
-        annotations:
-          argocd.argoproj.io/sync-wave: "10"
-
-      tenancyPlacements:
-        name: tenancy-placements
-        namespace: tenancies
-        project: tenancy-policy
-        repoURL: https://github.com/ngner/tenancy-by-acm-policy.git
-        targetRevision: master
-        path: placements
-        kustomize: true
-        syncPolicy:
-          automated:
-            prune: true
-            selfHeal: true
-        annotations:
-          argocd.argoproj.io/sync-wave: "20"
-
-      tenancyAccessControl:
-        name: tenancy-access-control
-        namespace: policies
-        project: tenancy-policy
-        repoURL: https://github.com/ngner/tenancy-by-acm-policy.git
-        targetRevision: master
-        path: policygen/AC-Access-Control
-        kustomize: true
-        syncPolicy:
-          automated:
-            prune: false
-            selfHeal: false
-        annotations:
-          argocd.argoproj.io/sync-wave: "30"
-
-      tenancyConfigurationManagement:
-        name: tenancy-configuration-management
-        namespace: policies
-        project: tenancy-policy
-        repoURL: https://github.com/ngner/tenancy-by-acm-policy.git
-        targetRevision: master
-        path: policygen/CM-Configuration-Management
-        kustomize: true
-        syncPolicy:
-          automated:
-            prune: true
-            selfHeal: true
-        annotations:
-          argocd.argoproj.io/sync-wave: "40"
-
-      tenancySystemAndCommsProtection:
-        name: tenancy-system-and-communications-protection
-        namespace: policies
-        project: tenancy-policy
-        repoURL: https://github.com/ngner/tenancy-by-acm-policy.git
-        targetRevision: master
-        path: policygen/SC-System-and-Communications-Protection
-        kustomize: true
-        syncPolicy:
-          automated:
-            prune: true
-            selfHeal: true
-        annotations:
-          argocd.argoproj.io/sync-wave: "50"
-
-      tenantGui:
-        name: tenant-form-acm-gui
-        namespace: tenant-form-acm-gui
-        project: tenancy-policy
-        repoURL: https://github.com/ngner/tenant-form-acm-gui.git
-        targetRevision: main
-        path: deployment
-        kustomize: true
-        syncPolicy:
-          automated:
-            prune: true
-            selfHeal: true
-        annotations:
-          argocd.argoproj.io/sync-wave: "60"
-
-hub:
+# Hub values: Multicloud GitOps baseline + ACM tenancy apps. Sync-wave 70 console
+# enablement is optional — see examples/console-plugin-enable.yaml.
+clusterGroup:
+  name: hub
+  namespaces:
+    open-cluster-management: null
+    vault: null
+    external-secrets-operator:
+      operatorGroup: true
+      targetNamespaces: []
+    external-secrets: null
+    config-demo: null
+    hello-world: null
+    tenancies: {}
+    policies: {}
+    tenant-form-acm-gui: {}
+  subscriptions:
+    acm:
+      name: advanced-cluster-management
+      namespace: open-cluster-management
+      channel: release-2.16
+    eso:
+      name: openshift-external-secrets-operator
+      namespace: external-secrets-operator
+      channel: stable-v1
+  argoProjects:
+  - hub
+  - config-demo
+  - hello-world
+  - tenancy-policy
+  sharedValueFiles:
+  - /overrides/values-{{ $.Values.global.clusterPlatform }}.yaml
+  - /overrides/values-{{ $.Values.global.clusterVersion }}-{{ $.Values.clusterGroup.name }}.yaml
   applications:
+    acm:
+      name: acm
+      namespace: open-cluster-management
+      argoProject: hub
+      chart: acm
+      chartVersion: 0.2.*
+    vault:
+      name: vault
+      namespace: vault
+      argoProject: hub
+      chart: hashicorp-vault
+      chartVersion: 0.1.*
+    openshift-external-secrets:
+      name: openshift-external-secrets
+      namespace: external-secrets
+      argoProject: hub
+      chart: openshift-external-secrets
+      chartVersion: 0.0.*
+    config-demo:
+      name: config-demo
+      namespace: config-demo
+      argoProject: config-demo
+      path: charts/all/config-demo
+    hello-world:
+      name: hello-world
+      namespace: hello-world
+      argoProject: hello-world
+      path: charts/all/hello-world
+    tenancyBase:
+      name: tenancy-base
+      namespace: tenancies
+      argoProject: tenancy-policy
+      repoURL: https://github.com/ngner/tenancy-by-acm-policy.git
+      targetRevision: master
+      path: tenancies
+      kustomize: true
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+      annotations:
+        argocd.argoproj.io/sync-wave: '10'
+    tenancyPlacements:
+      name: tenancy-placements
+      namespace: tenancies
+      argoProject: tenancy-policy
+      repoURL: https://github.com/ngner/tenancy-by-acm-policy.git
+      targetRevision: master
+      path: placements
+      kustomize: true
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+      annotations:
+        argocd.argoproj.io/sync-wave: '20'
+    tenancyAccessControl:
+      name: tenancy-access-control
+      namespace: policies
+      argoProject: tenancy-policy
+      repoURL: https://github.com/ngner/tenancy-by-acm-policy.git
+      targetRevision: master
+      path: policygen/AC-Access-Control
+      kustomize: true
+      syncPolicy:
+        automated:
+          prune: false
+          selfHeal: false
+      annotations:
+        argocd.argoproj.io/sync-wave: '30'
+    tenancyConfigurationManagement:
+      name: tenancy-configuration-management
+      namespace: policies
+      argoProject: tenancy-policy
+      repoURL: https://github.com/ngner/tenancy-by-acm-policy.git
+      targetRevision: master
+      path: policygen/CM-Configuration-Management
+      kustomize: true
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+      annotations:
+        argocd.argoproj.io/sync-wave: '40'
+    tenancySystemAndCommsProtection:
+      name: tenancy-system-and-communications-protection
+      namespace: policies
+      argoProject: tenancy-policy
+      repoURL: https://github.com/ngner/tenancy-by-acm-policy.git
+      targetRevision: master
+      path: policygen/SC-System-and-Communications-Protection
+      kustomize: true
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+      annotations:
+        argocd.argoproj.io/sync-wave: '50'
     tenantGui:
-      image: quay.io/ngner/tenant-form-acm-gui:latest
-
-  consolePluginPatch:
-    enabled: true
-    pluginName: tenant-form-acm-gui
-    syncWave: "70"
+      name: tenant-form-acm-gui
+      namespace: tenant-form-acm-gui
+      argoProject: tenancy-policy
+      repoURL: https://github.com/ngner/tenant-form-acm-gui.git
+      targetRevision: main
+      path: deployment
+      kustomize: true
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+      annotations:
+        argocd.argoproj.io/sync-wave: '60'
+  imperative:
+    jobs:
+    - name: hello-world
+      playbook: rhvp.cluster_utils.hello_world
+      timeout: 234
+  managedClusterGroups:
+    exampleRegion:
+      name: group-one
+      acmlabels:
+      - name: clusterGroup
+        value: group-one
+  argoCD:
+    configManagementPlugins:
+    - name: policy-generator
+      image: registry.redhat.io/rhacm2/policy-generator-rhel9:v2.12
+      pluginConfig: "apiVersion: argoproj.io/v1alpha1\nkind: ConfigManagementPlugin\nmetadata:\n  name: policy-generator\n\
+        spec:\n  version: v1.0\n  generate:\n    command: [/policy-generator/policy-generator, generate]\n  discover:\n  \
+        \  find:\n      command: [/policy-generator/policy-generator, discovery]\n"

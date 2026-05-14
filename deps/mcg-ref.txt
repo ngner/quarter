@@ -1,0 +1,2 @@
+# Git ref (branch or tag) in https://github.com/validatedpatterns/multicloud-gitops
+main

@@ -1,0 +1,42 @@
+---
+name: Render MCG overlay to pattern-install
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - "deps/mcg-ref.txt"
+      - "pattern-metadata.yaml"
+      - "values-global.yaml"
+      - "values-hub.yaml"
+      - "scripts/render-mcg-overlay.sh"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: render-pattern-install
+  cancel-in-progress: true
+
+jobs:
+  render-and-push:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Render overlay tree
+        run: |
+          chmod +x scripts/render-mcg-overlay.sh
+          ./scripts/render-mcg-overlay.sh
+
+      - name: Push pattern-install branch
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          cd build/mcg-overlay
+          git remote add publish "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          git push -f publish HEAD:pattern-install

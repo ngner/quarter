@@ -1,0 +1,22 @@
+# Validated Patterns Operator: install Quarter (distinct pattern extending MCG).
+# Operator clones gitSpec.targetRepo; use branch pattern-install (CI-rendered full MCG
+# tree + Quarter values). After first merge to main, run workflow "Render MCG overlay
+# to pattern-install" once if that branch does not exist yet.
+#
+# Prerequisites: Validated Patterns Operator on the hub cluster.
+# Apply: oc apply -f examples/pattern.yaml
+#
+# Argo CD Applications are created in namespace quarter-hub (pattern-scoped instance).
+apiVersion: gitops.hybrid-cloud-patterns.io/v1alpha1
+kind: Pattern
+metadata:
+  name: quarter
+  namespace: patterns-operator
+spec:
+  clusterGroupName: hub
+  multiSourceConfig:
+    enabled: true
+  gitSpec:
+    inClusterGitServer: false
+    targetRepo: https://github.com/ngner/quarter.git
+    targetRevision: pattern-install

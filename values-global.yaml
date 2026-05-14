@@ -1,12 +1,12 @@
+---
 global:
-  pattern: multicloud-gitops-extension
-  hubClusterDomain: apps.baremetal.internal.nickday.biz
-
+  pattern: quarter
   options:
     useCSV: false
     syncPolicy: Automatic
     installPlanApproval: Automatic
-
-  gitops:
-    namespace: openshift-gitops
-    project: hub
+main:
+  clusterGroupName: hub
+  multiSourceConfig:
+    enabled: true
+    clusterGroupChartVersion: "0.9.*"
