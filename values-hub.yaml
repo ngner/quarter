@@ -158,7 +158,7 @@ clusterGroup:
   argoCD:
     configManagementPlugins:
     - name: policy-generator
-      image: registry.redhat.io/rhacm2/policy-generator-rhel9:v2.12
+      image: registry.redhat.io/rhacm2/policy-generator-rhel9:v2.16
       pluginConfig: "apiVersion: argoproj.io/v1alpha1\nkind: ConfigManagementPlugin\nmetadata:\n  name: policy-generator\n\
         spec:\n  version: v1.0\n  generate:\n    command: [/policy-generator/policy-generator, generate]\n  discover:\n  \
         \  find:\n      command: [/policy-generator/policy-generator, discovery]\n"
