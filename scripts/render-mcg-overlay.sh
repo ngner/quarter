@@ -19,6 +19,15 @@ else
   git clone https://github.com/validatedpatterns/multicloud-gitops.git "$OUT"
   (cd "$OUT" && git fetch --depth 1 origin "${REF}" && git checkout -q FETCH_HEAD)
 fi
+# Shallow clones cannot be pushed to GitHub reliably (remote unpack / missing objects).
+# Resolve to a full history before we add the overlay commit.
+(
+  cd "$OUT"
+  if [[ "$(git rev-parse --is-shallow-repository 2>/dev/null)" == "true" ]]; then
+    echo "Unshallowing MCG clone so pattern-install push includes complete object graph..."
+    git fetch --unshallow
+  fi
+)
 cp "${ROOT}/pattern-metadata.yaml" "${ROOT}/values-global.yaml" "${ROOT}/values-hub.yaml" "$OUT/"
 (
   cd "$OUT"
